@@ -383,3 +383,33 @@ DummyDataGenerator.vcxproj -> x64\Debug\DummyDataGenerator.exe  ✓
 
 ### 다음 작업 지시
 - 리포지토리 최상위에 readme.md 파일 추가, 프로젝트 개요/개발내용/사용법/실행 결과 예시 작성, 이외 필요 내용 작성
+
+---
+
+## [2026-06-12] README.md 작성 - PoC 문서 완성
+
+### 작업 내용
+- 리포지토리 최상위에 `README.md` 작성
+  - **프로젝트 개요**: 역할, 시드 기반 생성 방식, 주요 특징
+  - **개발 내용**: 모듈 구성(Generator/JsonWriter/App/Models), 데이터 스키마(Sample/Order JSON), 기본 시드 생성 데이터 5건, 테스트 현황(34 TC)
+  - **디렉토리 구조**: 전체 파일 트리
+  - **빌드 방법**: Visual Studio / CMake 양쪽 안내
+  - **사용법**: 기본 실행, `--seed` 인자, 폴백 동작 설명
+  - **실행 결과 예시**: 콘솔 출력 및 생성된 JSON 내용
+  - **테스트 실행 명령**: ctest 사용법
+  - **개발 환경**: 언어/IDE/빌드/테스트/JSON 라이브러리 정보
+
+### 커밋
+- `bc22da9` [USER-Review] 사용자 리뷰 반영 - README.md 작성 지시
+- `c33e965` [AI-Docs] Add README.md
+
+### 리뷰 요청
+- README.md 내용 및 구성이 적절한지 확인 부탁드립니다.
+- DummyDataGenerator PoC가 완성되었습니다. 다음 작업 지시 부탁드립니다.
+
+---
+### 리뷰 (by User)
+-
+
+### 다음 작업 지시
+-
