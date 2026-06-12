@@ -286,5 +286,5 @@ DummyDataGenerator.vcxproj -> x64\Debug\DummyDataGenerator.exe  ✓
 - ../DataPersistence 개발 진행 상황 파악
 - ../DataPersistence 개발 문서 내용 파악
 - ../DataPersistence 개발 문서 내 FEATURE에 기초하여 내용 리팩토링
-- ../DataPersistence 에서 구현된 CRUD 기반 필요 모니터링 기능 추가
+- ../DataPersistence 에서 구현된 CRUD 기반 필요 Dummy generator 기능 추가
 
