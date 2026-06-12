@@ -18,33 +18,33 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="../src/main.cpp">
+    <ClCompile Include="src/main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="../src/App.cpp">
+    <ClCompile Include="src/App.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="../src/Generator.cpp">
+    <ClCompile Include="src/Generator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="../src/JsonWriter.cpp">
+    <ClCompile Include="src/JsonWriter.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="../src/App.h">
+    <ClInclude Include="src/App.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="../src/Generator.h">
+    <ClInclude Include="src/Generator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="../src/JsonWriter.h">
+    <ClInclude Include="src/JsonWriter.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="../src/models/Sample.h">
+    <ClInclude Include="src/models/Sample.h">
       <Filter>헤더 파일\models</Filter>
     </ClInclude>
-    <ClInclude Include="../src/models/Order.h">
+    <ClInclude Include="src/models/Order.h">
       <Filter>헤더 파일\models</Filter>
     </ClInclude>
   </ItemGroup>
