@@ -244,3 +244,47 @@ DummyDataGenerator/DummyDataGenerator.slnx 열기 후 빌드
 
 ### 다음 작업 지시
 - 직접 MSVC이용, 빌드 수행하며 빌드 오류 해결
+
+---
+
+## [2026-06-12] MSVC 빌드 오류 수정 - 빌드 성공
+
+### 작업 내용
+수정한 오류 3종:
+
+1. **소스 파일 경로 오류** (`../src/` → `src/`)
+   - `src/`와 `test/`가 vcxproj와 같은 폴더에 위치하는데 `../src/`로 잘못 설정되어 "No such file or directory" 발생
+   - `DummyDataGenerator.vcxproj`, `.vcxproj.filters` 내 경로 및 `AdditionalIncludeDirectories` 수정
+
+2. **한글 문자열 인코딩 오류** (`Generator.cpp`, `App.cpp`)
+   - 시스템 코드 페이지(CP949)와 소스 파일(UTF-8) 불일치로 C2001 발생
+   - `vcxproj` 모든 구성에 `<AdditionalOptions>/utf-8</AdditionalOptions>` 추가
+
+3. **`max` 매크로 충돌** (`App.cpp`)
+   - `<windows.h>`의 `max` 매크로가 `std::numeric_limits<std::streamsize>::max()` 호출을 방해 (C2589/C2059)
+   - `#include <windows.h>` 앞에 `#define NOMINMAX` 추가
+
+### 빌드 결과
+```
+DummyDataGenerator.vcxproj -> x64\Debug\DummyDataGenerator.exe  ✓
+```
+
+### 커밋
+- `778c026` [AI-Fix] MSVC 빌드 오류 3종 수정 - 소스 경로(../src→src), 인코딩(/utf-8), NOMINMAX
+
+### 리뷰 요청
+- VS에서 빌드(Ctrl+Shift+B) 후 성공 여부 확인 부탁드립니다.
+- `x64\Debug\DummyDataGenerator.exe` 실행 후 메뉴가 정상 출력되는지 확인 부탁드립니다.
+
+---
+### 리뷰 (by User)
+- 정상 빌드 및 콘솔 정상 출력 확인
+- 시료, 주문 이외에도 필요 기능에 대해서도 기능 구현 필요
+- 자체적 구현이 아니라 ../DataPersistence 내부의 CRUD 기능을 활용하여 모니터링이 가능해야 함
+
+### 다음 작업 지시
+- ../DataPersistence 개발 진행 상황 파악
+- ../DataPersistence 개발 문서 내용 파악
+- ../DataPersistence 개발 문서 내 FEATURE에 기초하여 내용 리팩토링
+- ../DataPersistence 에서 구현된 CRUD 기반 필요 모니터링 기능 추가
+
