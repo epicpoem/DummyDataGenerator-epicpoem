@@ -32,7 +32,7 @@
 
 ---
 
-<!-- 실제 로그는 아래에 최신순으로 작성 -->
+<!-- 실제 로그는 아래에 시간순(오래된 항목이 위, 새 항목이 아래)으로 작성 -->
 
 ## [2026-06-12] PRD 및 FEATURES 문서 작성
 
@@ -161,3 +161,59 @@
 ### 다음 작업 지시
 - C:\reviewer\PersonnelProject\DummyDataGenerator\DummyDataGenerator 내부 프로젝트 사용하여 진행하도록 내용 수정
 - 기존 잘못 생성된 프로젝트는 삭제
+
+---
+
+## [2026-06-12] 소스 구조 내부 VS 프로젝트로 재배치
+
+### 작업 내용
+- 루트 레벨에 잘못 생성된 `src/`, `test/`, `CMakeLists.txt`를 `DummyDataGenerator/DummyDataGenerator/` 하위로 이전 (git mv)
+- `DummyDataGenerator/DummyDataGenerator/include/nlohmann/json.hpp` 추가 (단일 헤더, v3.11.3)
+  - CMakeLists.txt의 FetchContent → 로컬 헤더 방식으로 변경 (인터넷 불필요)
+- `DummyDataGenerator/DummyDataGenerator/CMakeLists.txt` 위치 조정 및 경로 수정
+  - gmock 패키지 경로: `packages/gmock.1.11.0/lib/native` (솔루션 폴더 내 패키지 참조)
+- VS 프로젝트 `DummyDataGenerator.vcxproj` 업데이트
+  - 기존 빈 `main.cpp` 제거
+  - 모든 소스 파일(`../src/*.cpp`) ClCompile 항목에 등록
+  - 헤더 파일(`../src/**/*.h`) ClInclude 항목에 등록
+  - 모든 구성에 `AdditionalIncludeDirectories`: `../src;../include` 추가
+- VS 솔루션 파일(`DummyDataGenerator.slnx`) 신규 추가 (기존 파일 추적)
+
+### 최종 구조
+```
+DummyDataGenerator/DummyDataGenerator/
+├── CMakeLists.txt
+├── include/nlohmann/json.hpp
+├── src/  (Generator, JsonWriter, App, main, models/)
+├── test/ (GeneratorTest, JsonWriterTest)
+├── DummyDataGenerator/ (VS 프로젝트)
+│   └── DummyDataGenerator.vcxproj
+└── packages/gmock.1.11.0/
+```
+
+### 빌드 방법
+```
+# CMake (권장)
+cd DummyDataGenerator/DummyDataGenerator
+cmake -B build
+cmake --build build
+ctest --test-dir build
+
+# Visual Studio
+DummyDataGenerator/DummyDataGenerator.slnx 열기 후 빌드
+```
+
+### 커밋
+- `2c95777` [USER-Review] 사용자 리뷰 반영 - 내부 프로젝트 재배치 요청
+- `6fb47c9` [AI-Chore] 소스 구조 내부 VS 프로젝트로 이전
+
+### 리뷰 요청
+- 재배치된 구조가 의도에 맞는지 확인 부탁드립니다.
+- CMake 빌드 또는 VS에서 빌드 후 동작 확인 부탁드립니다.
+
+---
+### 리뷰 (by User)
+-
+
+### 다음 작업 지시
+-
