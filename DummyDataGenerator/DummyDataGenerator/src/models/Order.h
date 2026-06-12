@@ -2,9 +2,12 @@
 #include <string>
 
 struct Order {
-    std::string orderId;
+    std::string id;
     std::string sampleId;
-    std::string customer;
+    std::string customerName;
     int quantity;
     std::string status;
+    int actualProductionQuantity;
+    std::string productionStartTime;
+    double totalProductionTime;
 };

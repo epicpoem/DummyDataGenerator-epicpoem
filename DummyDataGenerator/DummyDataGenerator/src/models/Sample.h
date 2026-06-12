@@ -4,7 +4,7 @@
 struct Sample {
     std::string id;
     std::string name;
-    double productionTime;
+    double avgProdTime;
     double yield;
     int stock;
 };

@@ -71,7 +71,7 @@ TEST_F(JsonWriterTest, WriteSamplesAppendAddsNewEntries) {
     w.writeSamples(defaultSamples(), WriteMode::OVERWRITE);
 
     // Add a new sample with a different ID
-    std::vector<Sample> extra = {{"S-099", "테스트 시료", 1.0, 0.9, 100}};
+    std::vector<Sample> extra = {{"S-099", "테스트 시료", 1.0, 0.9, 100}};  // avgProdTime=1.0
     w.writeSamples(extra, WriteMode::APPEND);
 
     auto arr = readJson(w.getSamplesPath());

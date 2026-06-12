@@ -7,7 +7,7 @@ namespace {
 struct SampleTemplate {
     const char* id;
     const char* name;
-    double productionTime;
+    double avgProdTime;
     double yield;
     int defaultStock;
 };
@@ -45,7 +45,7 @@ std::vector<Sample> Generator::generateSamples() const {
     if (seed_ == DEFAULT_SEED) {
         // DEFAULT_SEED always produces the spec example data exactly
         for (const auto& t : SAMPLE_TEMPLATES) {
-            samples.push_back({t.id, t.name, t.productionTime, t.yield, t.defaultStock});
+            samples.push_back({t.id, t.name, t.avgProdTime, t.yield, t.defaultStock});
         }
         return samples;
     }
@@ -54,7 +54,7 @@ std::vector<Sample> Generator::generateSamples() const {
     std::uniform_int_distribution<int> stockDist(0, 999);
 
     for (const auto& t : SAMPLE_TEMPLATES) {
-        samples.push_back({t.id, t.name, t.productionTime, t.yield, stockDist(rng)});
+        samples.push_back({t.id, t.name, t.avgProdTime, t.yield, stockDist(rng)});
     }
     return samples;
 }
@@ -79,7 +79,10 @@ std::vector<Order> Generator::generateOrders(const std::vector<Sample>& samples,
             samples[sampleIdx(rng)].id,
             CUSTOMERS[customerIdx(rng)],
             qtyDist(rng),
-            "RESERVED"
+            "RESERVED",
+            0,
+            "",
+            0.0
         });
     }
     return orders;

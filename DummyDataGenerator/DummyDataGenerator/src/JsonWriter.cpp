@@ -21,21 +21,24 @@ bool JsonWriter::ensureDirectory() const {
 
 static json toJson(const Sample& s) {
     return {
-        {"id",             s.id},
-        {"name",           s.name},
-        {"productionTime", s.productionTime},
-        {"yield",          s.yield},
-        {"stock",          s.stock}
+        {"id",          s.id},
+        {"name",        s.name},
+        {"avgProdTime", s.avgProdTime},
+        {"yield",       s.yield},
+        {"stock",       s.stock}
     };
 }
 
 static json toJson(const Order& o) {
     return {
-        {"orderId",  o.orderId},
-        {"sampleId", o.sampleId},
-        {"customer", o.customer},
-        {"quantity", o.quantity},
-        {"status",   o.status}
+        {"id",                       o.id},
+        {"sampleId",                 o.sampleId},
+        {"customerName",             o.customerName},
+        {"quantity",                 o.quantity},
+        {"status",                   o.status},
+        {"actualProductionQuantity", o.actualProductionQuantity},
+        {"productionStartTime",      o.productionStartTime},
+        {"totalProductionTime",      o.totalProductionTime}
     };
 }
 

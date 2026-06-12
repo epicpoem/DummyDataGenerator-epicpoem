@@ -51,8 +51,8 @@ TEST(GeneratorTest, FixedFieldsAreIdenticalAcrossAllSeeds) {
     for (size_t i = 0; i < s1.size(); ++i) {
         EXPECT_EQ(s1[i].id,                  s2[i].id);
         EXPECT_EQ(s1[i].name,                s2[i].name);
-        EXPECT_DOUBLE_EQ(s1[i].productionTime, s2[i].productionTime);
-        EXPECT_DOUBLE_EQ(s1[i].yield,          s2[i].yield);
+        EXPECT_DOUBLE_EQ(s1[i].avgProdTime, s2[i].avgProdTime);
+        EXPECT_DOUBLE_EQ(s1[i].yield,        s2[i].yield);
     }
 }
 
@@ -84,9 +84,9 @@ TEST(GeneratorTest, SameSeedProducesSameOrders) {
 
     ASSERT_EQ(o1.size(), o2.size());
     for (size_t i = 0; i < o1.size(); ++i) {
-        EXPECT_EQ(o1[i].sampleId, o2[i].sampleId);
-        EXPECT_EQ(o1[i].customer, o2[i].customer);
-        EXPECT_EQ(o1[i].quantity, o2[i].quantity);
+        EXPECT_EQ(o1[i].sampleId,     o2[i].sampleId);
+        EXPECT_EQ(o1[i].customerName, o2[i].customerName);
+        EXPECT_EQ(o1[i].quantity,     o2[i].quantity);
     }
 }
 
@@ -95,7 +95,7 @@ TEST(GeneratorTest, OrderIdContainsSuppliedDate) {
     auto orders  = Generator().generateOrders(samples, "20260612");
 
     for (const auto& o : orders) {
-        EXPECT_NE(o.orderId.find("20260612"), std::string::npos);
+        EXPECT_NE(o.id.find("20260612"), std::string::npos);
     }
 }
 
