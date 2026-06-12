@@ -53,6 +53,7 @@ enable_testing()
 add_executable(DummyDataGeneratorTests
     test/GeneratorTest.cpp
     test/JsonWriterTest.cpp
+    test/AppTest.cpp
 )
 target_link_libraries(DummyDataGeneratorTests PRIVATE DummyDataGeneratorLib gmock_main)
 add_test(NAME DummyDataGeneratorTests COMMAND DummyDataGeneratorTests)

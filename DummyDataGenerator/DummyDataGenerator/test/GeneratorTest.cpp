@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <limits>
 #include "Generator.h"
 
 // --- generateSamples ---
@@ -116,4 +117,39 @@ TEST(GeneratorTest, OrderSampleIdBelongsToSampleList) {
 TEST(GeneratorTest, EmptySamplesProducesNoOrders) {
     auto orders = Generator(42).generateOrders({}, "20260612");
     EXPECT_TRUE(orders.empty());
+}
+
+// --- Negative / boundary cases ---
+
+TEST(GeneratorTest, MaxUintSeedProducesValidSamples) {
+    auto samples = Generator(std::numeric_limits<unsigned int>::max()).generateSamples();
+    ASSERT_EQ(samples.size(), 5u);
+    for (const auto& s : samples) {
+        EXPECT_GE(s.stock, 0);
+        EXPECT_LE(s.stock, 999);
+    }
+}
+
+TEST(GeneratorTest, AllOrderQuantitiesInValidRange) {
+    Generator gen(42);
+    auto samples = gen.generateSamples();
+    auto orders  = gen.generateOrders(samples, "20260612");
+
+    EXPECT_FALSE(orders.empty());
+    for (const auto& o : orders) {
+        EXPECT_GE(o.quantity, 50);
+        EXPECT_LE(o.quantity, 500);
+    }
+}
+
+TEST(GeneratorTest, NewOrderFieldsHaveDefaultValues) {
+    Generator gen(42);
+    auto samples = gen.generateSamples();
+    auto orders  = gen.generateOrders(samples, "20260612");
+
+    for (const auto& o : orders) {
+        EXPECT_EQ(o.actualProductionQuantity, 0);
+        EXPECT_TRUE(o.productionStartTime.empty());
+        EXPECT_DOUBLE_EQ(o.totalProductionTime, 0.0);
+    }
 }

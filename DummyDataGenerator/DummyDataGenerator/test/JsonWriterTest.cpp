@@ -116,3 +116,73 @@ TEST_F(JsonWriterTest, WriteOrdersAppendAccumulatesEntries) {
     auto arr = readJson(w.getOrdersPath());
     EXPECT_EQ(arr.size(), orders.size() * 2);
 }
+
+// --- Negative / boundary cases ---
+
+TEST_F(JsonWriterTest, WriteEmptySamplesCreatesEmptyArray) {
+    JsonWriter w(testDir);
+    EXPECT_TRUE(w.writeSamples({}, WriteMode::OVERWRITE));
+
+    auto arr = readJson(w.getSamplesPath());
+    EXPECT_TRUE(arr.is_array());
+    EXPECT_EQ(arr.size(), 0u);
+}
+
+TEST_F(JsonWriterTest, WriteEmptyOrdersCreatesEmptyArray) {
+    JsonWriter w(testDir);
+    EXPECT_TRUE(w.writeOrders({}, WriteMode::OVERWRITE));
+
+    auto arr = readJson(w.getOrdersPath());
+    EXPECT_TRUE(arr.is_array());
+    EXPECT_EQ(arr.size(), 0u);
+}
+
+TEST_F(JsonWriterTest, AppendWithCorruptJsonFallsBackToEmptyAndAddsEntries) {
+    JsonWriter w(testDir);
+
+    // Create directory and write corrupt JSON
+    fs::create_directories(testDir);
+    std::ofstream corrupt(w.getSamplesPath());
+    corrupt << "{ this is not valid json }}}";
+    corrupt.close();
+
+    // Append should recover: treat corrupt file as empty array
+    EXPECT_TRUE(w.writeSamples(defaultSamples(), WriteMode::APPEND));
+
+    auto arr = readJson(w.getSamplesPath());
+    EXPECT_EQ(arr.size(), 5u);
+}
+
+TEST_F(JsonWriterTest, OverwriteSamplesFieldsMatchDataPersistenceSchema) {
+    JsonWriter w(testDir);
+    w.writeSamples(defaultSamples(), WriteMode::OVERWRITE);
+
+    auto arr = readJson(w.getSamplesPath());
+    ASSERT_FALSE(arr.empty());
+    const auto& first = arr[0];
+    EXPECT_TRUE(first.contains("id"));
+    EXPECT_TRUE(first.contains("name"));
+    EXPECT_TRUE(first.contains("avgProdTime"));
+    EXPECT_TRUE(first.contains("yield"));
+    EXPECT_TRUE(first.contains("stock"));
+}
+
+TEST_F(JsonWriterTest, OverwriteOrdersFieldsMatchDataPersistenceSchema) {
+    JsonWriter w(testDir);
+    Generator gen(42);
+    auto samples = gen.generateSamples();
+    auto orders  = gen.generateOrders(samples, "20260612");
+    w.writeOrders(orders, WriteMode::OVERWRITE);
+
+    auto arr = readJson(w.getOrdersPath());
+    ASSERT_FALSE(arr.empty());
+    const auto& first = arr[0];
+    EXPECT_TRUE(first.contains("id"));
+    EXPECT_TRUE(first.contains("sampleId"));
+    EXPECT_TRUE(first.contains("customerName"));
+    EXPECT_TRUE(first.contains("quantity"));
+    EXPECT_TRUE(first.contains("status"));
+    EXPECT_TRUE(first.contains("actualProductionQuantity"));
+    EXPECT_TRUE(first.contains("productionStartTime"));
+    EXPECT_TRUE(first.contains("totalProductionTime"));
+}
