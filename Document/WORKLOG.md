@@ -288,3 +288,45 @@ DummyDataGenerator.vcxproj -> x64\Debug\DummyDataGenerator.exe  ✓
 - ../DataPersistence 개발 문서 내 FEATURE에 기초하여 내용 리팩토링
 - ../DataPersistence 에서 구현된 CRUD 기반 필요 Dummy generator 기능 추가
 
+---
+
+## [2026-06-12] DataPersistence 스키마 동기화 - 모델 필드 및 JSON 키 정합성 확보
+
+### 작업 내용
+- `../DataPersistence` 프로젝트 구조 및 문서(PRD.md, FEATURES/*.md, 헤더 파일) 전체 파악
+- **DataPersistence와 DummyDataGenerator 모델 필드 불일치 수정:**
+
+| 항목 | 수정 전 | 수정 후 |
+|------|---------|---------|
+| `Sample.productionTime` | `productionTime` | `avgProdTime` |
+| `Order.orderId` | `orderId` | `id` |
+| `Order.customer` | `customer` | `customerName` |
+| Order 누락 필드 | (없음) | `actualProductionQuantity`, `productionStartTime`, `totalProductionTime` 추가 |
+
+- `JsonWriter.cpp`: JSON 직렬화 키 DataPersistence와 동일하게 정렬
+- `Generator.cpp`: 주문 생성 시 신규 필드 기본값 추가 (각각 0, "", 0.0)
+- `GeneratorTest.cpp`, `JsonWriterTest.cpp`: 변경된 필드명 반영
+
+### DataPersistence 현황 파악 요약
+- Repository 패턴 기반 C++17 구현 (SampleRepository, OrderRepository 인터페이스)
+- JsonSampleRepository, JsonOrderRepository로 JSON 파일 영속성 구현
+- 시료 CRUD 5종 + 주문 CRUD 5종 + 재고 직접 수정 (총 11기능) 완료
+- 주문 상태: RESERVED / REJECTED / PRODUCING / CONFIRMED / RELEASE
+
+### 커밋
+- `7864ad5` [USER-Review] 사용자 리뷰 반영 - DataPersistence CRUD 기반 Dummy generator 기능 추가 지시
+- `04bb782` [AI-Fix] DataPersistence JSON 스키마와 모델 필드 동기화
+
+### 리뷰 요청
+- DataPersistence와 JSON 스키마 정합성이 맞는지 확인 부탁드립니다.
+- DummyDataGenerator가 생성하는 `data/samples.json`, `data/orders.json`을 DataPersistence에서 그대로 읽을 수 있는지 테스트 부탁드립니다.
+- 다음으로 "DataPersistence CRUD 기반 Dummy generator 기능 추가" 작업이 남아 있습니다. 현재는 DummyDataGenerator가 직접 JSON을 작성합니다. DataPersistence의 Repository 클래스를 직접 사용하도록 변경할지, 아니면 JSON 포맷만 맞추는 현재 방식을 유지할지 방향 결정 부탁드립니다.
+
+---
+### 리뷰 (by User)
+- 스키마 정합성은 문제 없는 것으로 리뷰, 파일 로드 확인
+- 포맷만 맞추는 수준으로 POC 진행 예정 (클래스 사용은 이후 통합시 사용)
+
+### 다음 작업 지시
+- 현재 수준에서 POC 마무리 이후 본 개발 진행 예정
+- 에러처리 가능하도록 네거티브 TC 추가
