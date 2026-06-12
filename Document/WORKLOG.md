@@ -217,3 +217,30 @@ DummyDataGenerator/DummyDataGenerator.slnx 열기 후 빌드
 
 ### 다음 작업 지시
 - 솔루션 수정 및 시작 지점 main.cpp로 변경
+
+---
+
+## [2026-06-12] VS .vcxproj.filters 수정 - main.cpp 열기 오류 해결
+
+### 작업 내용
+- 원인: `.vcxproj.filters`가 소스 재배치 후에도 이전 빈 `main.cpp` (프로젝트 폴더 내) 를 참조하고 있어 VS에서 파일을 찾지 못함
+- `DummyDataGenerator.vcxproj.filters` 전면 재작성
+  - 기존 `main.cpp` 참조 제거
+  - `../src/main.cpp`, `../src/App.cpp`, `../src/Generator.cpp`, `../src/JsonWriter.cpp` → **소스 파일** 필터 등록
+  - `../src/App.h`, `../src/Generator.h`, `../src/JsonWriter.h` → **헤더 파일** 필터 등록
+  - `../src/models/Sample.h`, `../src/models/Order.h` → **헤더 파일\models** 서브 필터 등록
+
+### 커밋
+- `2da5554` [AI-Fix] VS .vcxproj.filters 수정 - 이전 main.cpp 참조 제거 및 src/ 하위 파일 경로 등록
+
+### 리뷰 요청
+- VS에서 솔루션 재열기 후 Solution Explorer에서 소스 파일들이 정상 표시되고 열리는지 확인 부탁드립니다.
+- 빌드(Ctrl+Shift+B) 후 오류 없이 빌드되는지 확인 부탁드립니다.
+
+---
+### 리뷰 (by User)
+- 빌드 오류 발생
+- 솔루션 오픈시 파일 오픈 관련 에러는 없음
+
+### 다음 작업 지시
+- 직접 MSVC이용, 빌드 수행하며 빌드 오류 해결
