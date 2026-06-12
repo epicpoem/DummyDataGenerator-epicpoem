@@ -115,3 +115,49 @@
 
 ### 다음 작업 지시
 - 코드 작업 시작
+
+---
+
+## [2026-06-12] 코드 구현 - Generator, JsonWriter, App, 테스트
+
+### 작업 내용
+- `CMakeLists.txt` 작성 (프로젝트 빌드 구성)
+  - nlohmann/json: FetchContent로 v3.11.3 연동
+  - Google Test/Mock: 로컬 `packages/gmock.1.11.0` 활용 (인터넷 불필요)
+  - DummyDataGeneratorLib: 메인 실행 파일과 테스트가 공유하는 정적 라이브러리
+- `src/models/Sample.h`, `src/models/Order.h`: 데이터 모델 정의
+- `src/Generator.h`, `src/Generator.cpp`: 시드 기반 더미 데이터 생성
+  - DEFAULT_SEED(0): 스펙 예시 5건과 동일한 데이터 생성 (하드코딩)
+  - 커스텀 시드: mt19937로 재고/주문수량/고객명 생성
+- `src/JsonWriter.h`, `src/JsonWriter.cpp`: JSON 파일 저장 (OVERWRITE/APPEND)
+  - APPEND 모드: 중복 시료 ID 건너뜀
+  - 대상 디렉토리 없으면 자동 생성
+- `src/App.h`, `src/App.cpp`, `src/main.cpp`: CLI 진입점 및 메뉴
+  - `--seed <정수>` argument 파싱, 비정수 입력 시 기본 시드로 폴백
+  - Windows UTF-8 콘솔 출력 설정
+- `test/GeneratorTest.cpp`: Generator 단위 테스트 11건
+- `test/JsonWriterTest.cpp`: JsonWriter 단위 테스트 9건
+
+### 커밋
+- `63d03fe` [AI-Chore] CMake 프로젝트 초기 구성
+- `65878fd` [AI-Feature] 더미 데이터 생성 기능 구현
+- `5ee8adf` [AI-Test] Generator, JsonWriter 단위 테스트 추가
+
+### 리뷰 요청
+- 빌드 후 `./DummyDataGenerator` (시드 없음) 실행 시 스펙 예시 5건이 `data/samples.json`에 저장되는지 확인 부탁드립니다.
+- `./DummyDataGenerator --seed 42` 실행 시 매번 동일한 값이 생성되는지 확인 부탁드립니다.
+- 빌드 및 테스트 실행 방법:
+  ```
+  cmake -B build
+  cmake --build build
+  ctest --test-dir build
+  ```
+
+---
+### 리뷰 (by User)
+- 구현 내용 확인
+- C:\reviewer\PersonnelProject\DummyDataGenerator\DummyDataGenerator 내부의 프로젝트로 진행하여야 하나 별도 프로젝트 생성
+
+### 다음 작업 지시
+- C:\reviewer\PersonnelProject\DummyDataGenerator\DummyDataGenerator 내부 프로젝트 사용하여 진행하도록 내용 수정
+- 기존 잘못 생성된 프로젝트는 삭제
