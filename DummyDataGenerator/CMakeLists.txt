@@ -4,21 +4,13 @@ project(DummyDataGenerator VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# UTF-8 source encoding (Windows)
 if(MSVC)
     add_compile_options(/utf-8)
 endif()
 
-# nlohmann/json via FetchContent
-include(FetchContent)
-FetchContent_Declare(
-    nlohmann_json
-    GIT_REPOSITORY https://github.com/nlohmann/json.git
-    GIT_TAG        v3.11.3
-    GIT_SHALLOW    TRUE
-)
-set(JSON_BuildTests OFF CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(nlohmann_json)
+# nlohmann/json - local single header (include/)
+add_library(nlohmann_json INTERFACE)
+target_include_directories(nlohmann_json INTERFACE ${CMAKE_SOURCE_DIR}/include)
 
 # Google Test / Mock from local NuGet package (no internet needed)
 set(GMOCK_NATIVE ${CMAKE_SOURCE_DIR}/packages/gmock.1.11.0/lib/native)
@@ -50,7 +42,7 @@ add_library(DummyDataGeneratorLib STATIC
     src/App.cpp
 )
 target_include_directories(DummyDataGeneratorLib PUBLIC src)
-target_link_libraries(DummyDataGeneratorLib PUBLIC nlohmann_json::nlohmann_json)
+target_link_libraries(DummyDataGeneratorLib PUBLIC nlohmann_json)
 
 # Main executable
 add_executable(DummyDataGenerator src/main.cpp)
