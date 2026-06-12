@@ -330,3 +330,56 @@ DummyDataGenerator.vcxproj -> x64\Debug\DummyDataGenerator.exe  ✓
 ### 다음 작업 지시
 - 현재 수준에서 POC 마무리 이후 본 개발 진행 예정
 - 에러처리 가능하도록 네거티브 TC 추가
+
+---
+
+## [2026-06-12] 네거티브 TC 추가 - PoC 테스트 완성
+
+### 작업 내용
+- `App::parseSeed` public static으로 변경 → 단위 테스트 가능하게 리팩토링
+- `test/AppTest.cpp` 신규 추가 (6개 TC):
+  - `--seed` 인자 없음 → DEFAULT_SEED 반환
+  - 유효한 정수 seed → 파싱 성공
+  - 비정수 seed (`abc`) → DEFAULT_SEED 폴백
+  - `--seed` 뒤에 값 없음 → DEFAULT_SEED 폴백
+  - 알 수 없는 플래그 무시 → DEFAULT_SEED 반환
+  - seed 0 (DEFAULT_SEED 값 자체) → DEFAULT_SEED 반환
+- `test/GeneratorTest.cpp` 네거티브 TC 3개 추가:
+  - `MaxUintSeedProducesValidSamples`: 최대 seed 값에서도 유효한 데이터 생성
+  - `AllOrderQuantitiesInValidRange`: 주문 수량이 50~500 범위 내 보장
+  - `NewOrderFieldsHaveDefaultValues`: 신규 Order 필드 기본값 (0, "", 0.0) 검증
+- `test/JsonWriterTest.cpp` 네거티브 TC 4개 추가:
+  - `WriteEmptySamplesCreatesEmptyArray`: 빈 벡터 → `[]` JSON 생성
+  - `WriteEmptyOrdersCreatesEmptyArray`: 빈 벡터 → `[]` JSON 생성
+  - `AppendWithCorruptJsonFallsBackToEmptyAndAddsEntries`: 손상된 기존 JSON에 append 시 복구
+  - `OverwriteSamplesFieldsMatchDataPersistenceSchema`: JSON 키가 DataPersistence 스키마와 일치 확인
+  - `OverwriteOrdersFieldsMatchDataPersistenceSchema`: Order JSON 키 8종 전체 확인
+- `CMakeLists.txt`: `test/AppTest.cpp` 테스트 타겟에 추가
+
+### TC 현황
+| 파일 | 기존 | 추가 | 합계 |
+|------|------|------|------|
+| GeneratorTest.cpp | 11 | 3 | 14 |
+| JsonWriterTest.cpp | 9 | 5 | 14 |
+| AppTest.cpp | 0 | 6 | 6 |
+| **합계** | **20** | **14** | **34** |
+
+### 커밋
+- `04b790a` [USER-Review] 사용자 리뷰 반영 - 네거티브 TC 추가 지시
+- `b5575dd` [AI-Test] 네거티브 TC 추가
+
+### 리뷰 요청
+- CMake 빌드 후 테스트 전체 실행 확인 부탁드립니다:
+  ```
+  cd DummyDataGenerator/DummyDataGenerator
+  cmake -B build && cmake --build build
+  ctest --test-dir build --output-on-failure
+  ```
+- PoC 마무리 후 다음 작업 지시 부탁드립니다.
+
+---
+### 리뷰 (by User)
+- 빌드수행 및 테스트 완료
+
+### 다음 작업 지시
+- 리포지토리 최상위에 readme.md 파일 추가, 프로젝트 개요/개발내용/사용법/실행 결과 예시 작성, 이외 필요 내용 작성
