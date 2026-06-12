@@ -213,7 +213,7 @@ DummyDataGenerator/DummyDataGenerator.slnx 열기 후 빌드
 
 ---
 ### 리뷰 (by User)
--
+- VS에서 열었을때 main.cpp를 열수 없다고 표시됨
 
 ### 다음 작업 지시
--
+- 솔루션 수정 및 시작 지점 main.cpp로 변경
